@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27010/Scatch");
 const ownerSchema = mongoose.Schema({
   fullName: {
      type: String, 
