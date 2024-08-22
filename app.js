@@ -8,7 +8,9 @@ const usersRouter = require("./routes/usersRouter");
 const productsRouter = require("./routes/productsRouter");
 const ownersRouter = require("./routes/ownersRouter");
 const homepageRouter = require("./routes/index");
-const { default: mongoose } = require("mongoose");
+
+
+require('dotenv').config()
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -13,4 +13,4 @@ const userSchema = mongoose.Schema({
   contact: Number,
 });
 
-module.exports = mongoose.model("owner", userSchema);
+module.exports = mongoose.model("user", userSchema);
