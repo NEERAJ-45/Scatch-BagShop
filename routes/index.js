@@ -6,24 +6,11 @@ const productModel = require("../models/productModel");
 router.get("/", (req, res) => {
   let error = req.flash("error");
 
-  res.render("index", { error });
+  res.render("index", { error, loggedIn: false });
 });
-router.get("/shop", async(req, res) => {
-  // const products = [
-  //   {
-  //     name: "Clinge Bag",
-  //     price: 1200,
-  //     imageName: "clinge-bag.PNG", 
-  //     bgcolor: "#A7C7E7",
-  //     panelcolor: "#7393B3",
-  //     textcolor: "#FFFFFF",
-  //   },
-   
+router.get("/shop", async (req, res) => {
+  let products = await productModel.find();
 
-  let products =   await productModel.find()
-
-
-  
   res.render("shop", { products });
 });
 module.exports = router;
