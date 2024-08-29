@@ -1,46 +1,119 @@
 <%- include('./partials/header') %>
-    <div class="w-full h-screen flex items-start px-20 py-20 gap-10">
-        <div class="w-[30%] rounded-md overflow-hidden">
-            <div class="w-full h-80 bg-yellow-500"></div>
-            <div class="w-full flex justify-between px-5 py-4">
-                <h3 class="text-2xl">Clinge Bag</h3>
-                <div class="flex items-center gap-2">
-                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-add-line"></i>
-                    <div class="px-2 py-1 rounded-md bg-white text-black">01</div>
-                    <i class="w-7 h-7 bg-white flex rounded-full items-center justify-center ri-subtract-line"></i>
-                </div>
-            </div>
-            <div class="flex items-center justify-between px-5 py-3">
-                <h4 class="text-lg">Net Total</h4>
-                <h2 class="text-lg">₹ 1200</h2>
-            </div>
+
+<div class="container mx-auto p-6">
+    <!-- Display flash messages -->
+    <% if (messages.success) { %>
+        <div class="alert alert-success">
+            <%= messages.success %>
         </div>
-        <div class="w-[70%]">
-            <h3 class="text-xl">Price Breakdown</h3>
-            <div class="px-10 mt-5">
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Total MRP</h4>
-                    <h4>₹ 1920</h4>
+    <% } %>
+    <% if (messages.error) { %>
+        <div class="alert alert-error">
+            <%= messages.error %>
+        </div>
+    <% } %>
+
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">My Cart</h2>
+        <% if (user.cart.length > 0) { %>
+            <% user.cart.forEach(item => { %>
+                <div id="item-<%= item._id %>" class="flex items-start border-b py-4">
+                    <div class="w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden">
+                        <img class="w-full h-full object-contain" src="data:image/jpeg;base64,<%= item.image.toString('base64') %>" alt="<%= item.name %>">
+                    </div>
+                    <div class="ml-4 flex-grow">
+                        <h3 class="text-lg font-semibold"><%= item.name %></h3>
+                        <p class="text-sm text-gray-600">Sold by: Flipkart Seller</p>
+                        <div class="flex items-center mt-2">
+                            <div class="text-lg font-semibold text-green-600">₹<%= item.bill %></div>
+                            <div class="ml-2 text-sm text-gray-500 line-through">₹<%= item.price %></div>
+                            <div class="ml-2 text-sm text-green-600">(₹<%= item.discount %> OFF)</div>
+                        </div>
+                        <div class="flex items-center mt-2">
+                            <button class="border rounded p-1">-</button>
+                            <span class="mx-2">1</span>
+                            <button class="border rounded p-1">+</button>
+                        </div>
+                    </div>
+                    <div class="ml-4 flex-shrink-0">
+                        <form action="/removefromcart/<%= item._id %>" method="POST" class="remove-form">
+                            <button type="submit" class="text-sm text-red-500">Remove</button>
+                        </form>
+                    </div>
                 </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Discount on MRP</h4>
-                    <h4>₹ 0</h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Platform Fee</h4>
-                    <h4>₹ 20</h4>
-                </div>
-                <div class="flex mt-2">
-                    <h4 class="w-1/3">Shipping Fee</h4>
-                    <h4>FREE</h4>
-                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="text-center py-10">
+                <h3 class="text-lg">Your cart is empty!</h3>
+                <p class="text-sm text-gray-600">Add items to it now.</p>
+                <a href="/shop" class="mt-4 inline-block bg-blue-500 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-600 transition">Shop Now</a>
             </div>
-            <div class="w-full h-[1px] bg-black mt-10"></div>
-            <div class="flex mt-5">
-                <h3 class="w-1/3 text-xl">Total Amount</h3>
-                <h3 class="font-semibold text-xl text-green-600">₹ 1940</h3>
-            </div>
-            <form action=""></form>
+        <% } %>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg p-6 mt-6">
+        <h3 class="text-lg font-semibold mb-4">Price Details</h3>
+        <div class="flex justify-between mb-2">
+            <span>Total MRP</span>
+            <span>₹<%= user.cart.reduce((acc, item) => acc + Number(item.price), 0) %></span>
+        </div>
+        <div class="flex justify-between mb-2">
+            <span>Discount on MRP</span>
+            <span>-₹<%= user.cart.reduce((acc, item) => acc + Number(item.discount), 0) %></span>
+        </div>
+        <div class="flex justify-between mb-2">
+            <span>Platform Fee</span>
+            <span>₹20</span>
+        </div>
+        <div class="flex justify-between mb-2">
+            <span>Shipping Fee</span>
+            <span>FREE</span>
+        </div>
+        <hr class="my-4">
+        <div class="flex justify-between text-lg font-semibold">
+            <span>Total Amount</span>
+            <span>₹<%= user.cart.reduce((acc, item) => acc + item.bill, 20) %></span>
+        </div>
+        <div class="mt-6">
+            <form action="/checkout" method="POST">
+                <button type="submit" class="w-full bg-orange-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-orange-600 transition">Place Order</button>
+            </form>
         </div>
     </div>
-    <%- include('./partials/footer') %>
+</div>
+
+<%- include('./partials/footer') %>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const forms = document.querySelectorAll('.remove-form');
+        
+        forms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); // Prevent the default form submission
+
+                const itemId = form.parentElement.parentElement.id;
+                const formData = new FormData(form);
+
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (response.ok) {
+                        // Add a delay before removing the item from the DOM
+                        setTimeout(() => {
+                            document.getElementById(itemId).style.opacity = '0';
+                            setTimeout(() => document.getElementById(itemId).remove(), 300); // Remove after fade-out
+                        }, 3000); // 3 seconds delay
+                    } else {
+                        console.error('Failed to remove item');
+                        // Optionally handle the error here
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    // Optionally handle the error here
+                });
+            });
+        });
+    });
+</script>

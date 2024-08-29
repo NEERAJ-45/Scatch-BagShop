@@ -1,13 +1,23 @@
 <%- include('./partials/header') %>
+
+<% if (success && success.length > 0) { %>
+    <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-blue-500">
+        <span class="inline-block mt-1 mb-1 text-white">
+            <%= success %>
+        </span>
+    </div>
+<% } %>
+
 <div class="w-full h-screen flex items-start px-20 py-20">
     <div class="w-[25%] flex h-screen flex-col items-start">
         <div class="flex items-center gap-2">
             <h3 class="font-semibold text-lg">Sort by</h3>
-            <form action="/shop">
+            <form action="/shop" method="GET">
                 <select class="border-[1px] px-2 py-1 rounded-md shadow-sm" name="sortby" id="">
                     <option value="popular">Popular</option>
                     <option value="newest">Newest</option>
                 </select>
+                <button type="submit" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-blue-600 transition">Sort</button>
             </form>
         </div>
         <div class="flex flex-col mt-20 space-y-2">
@@ -23,11 +33,13 @@
     </div>
     <div class="w-[75%] flex flex-col gap-5 h-screen overflow-y-auto">
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <% products.forEach(function(product){ %>
+            <% products.forEach(function(product) { %>
                 <div class="w-full max-w-xs">
                     <div class="w-full h-52 flex items-center justify-center rounded-t-lg bg-[<%= product.bgcolor %>] shadow-md">
                         <% if (product.image) { %>
-                            <img class="h-[12rem] w-full object-contain" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>">
+                            <img class="h-[12rem] w-full object-contain"
+                                src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
+                                alt="<%= product.name %>">
                         <% } else { %>
                             <div class="text-white text-xl">No Image Available</div>
                         <% } %>
@@ -39,7 +51,8 @@
                             </h3>
                             <h4 class="text-sm font-medium">₹ <%= product.price %></h4>
                         </div>
-                        <a class="w-8 h-8 flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-200 transition" href="/addtocart/<%= product._id %>">
+                        <a class="w-8 h-8 flex items-center justify-center rounded-full bg-white shadow hover:bg-gray-200 transition"
+                            href="/addtocart/<%= product._id %>">
                             <i class="ri-add-line text-lg text-[<%= product.panelcolor %>]"></i>
                         </a>
                     </div>
@@ -48,4 +61,5 @@
         </div>
     </div>
 </div>
+
 <%- include('./partials/footer') %>
